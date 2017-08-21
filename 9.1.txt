@@ -1,0 +1,38 @@
+1. What is NoSQL data base?
+A NoSQL (originally referring to "non SQL" or "non relational") database provides a mechanism for storage and retrieval of data that is modeled in means other than the tabular relations used in relational databases. ... NoSQL databases are increasingly used in big data and real-time web applications.
+
+2. How does data get stored in NoSQl database?
+Graph stores are used to store information about networks of data, such as social connections. Graph stores include Neo4J and Giraph. Key-value stores are the simplest NoSQL databases. Every single item in the database is stored as an attribute name (or 'key'), together with its value.
+3. What is a column family in HBase?
+
+A column family is a NoSQL object that contains columns of related data. It is a tuple (pair) that consists of a key-value pair, where the key is mapped to a value that is a set of columns. In analogy with relational databases, a column family is as a "table", each key-value pair being a "row".
+
+4. How many maximum number of columns can be added to HBase table?
+
+There is no limit on number of column families in HBase, in theory. In reality, there are several factors which can limit useable number of column families in HBase:
+
+HBase Admin web UI usability. It will be very hard to show even 100s of column families in a table configuration page.
+HDFS practical limit of maximum number of files. Say, 100m. If your table has N regions, M column families you will need NxM directories to support this configuration. Every region/column family, in turn, can contain up to K store files (depends on write load and many other configuration options). With very modest N = 100 and K = 10 we can say practical limit of maximum number of column families is less than 100K. Usually, much less than 100K.
+
+5.Why columns are not defined at the time of table creation in HBase?
+
+In the HBase data model columns are grouped into column families, which must be defined up front during table creation. Column families are stored together on disk, which is why HBase is referred to as a column-oriented data store.Generally, column families remain fixed throughout the lifetime of an HBase table but new column families can be added by using administrative commands. The official recommendation for the number of column families per table is three or less.
+
+6. How does data get managed in HBase?
+Reading Data:
+Get and Scan are the two ways to read data from HBase, aside from manually parsing HFiles. A Get is simply a Scan limited by the API to one row. A Scan fetches zero or more rows of a table. By default, a Scan reads the entire table from start to end. You can limit your Scan results in several different ways, which affect the Scan's load in terms of IO, network, or both, as well as processing load on the client side.
+
+Writing data:
+
+To write data to HBase, you use methods of the HTableInterface class. You can use the Java API directly, or use HBase Shell, Thrift API, REST API, or another client which uses the Java API indirectly. When you issue a Put, the coordinates of the data are the row, the column, and the timestamp. The timestamp is unique per version of the cell, and can be generated automatically or specified programmatically by your application, and must be a long integer.
+
+7. What happens internally when new data gets inserted into HBase table?
+
+INSERT INTO table-name
+    Specifies the HBase table into which data is to be inserted.
+columns
+    Specifies the order and column names of those columns into which data is to be inserted. If no column names are specified, data is to be inserted into all columns that were listed, and in the order that was specified, when the named table was created. 
+
+
+
+
